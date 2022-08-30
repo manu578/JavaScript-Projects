@@ -1,0 +1,137 @@
+var buttonColors = ["green", "red", "yellow", "blue"];
+
+var gamePattern = [];
+
+var userPattern = [];
+
+
+
+// START GAME
+
+$(document).on("keydown", function() {
+
+if (gamePattern.length === 0){
+
+    nextSequence();
+
+    }
+
+});
+
+
+
+//PLAYER'S TURN
+
+$(".btn").click(function() {
+
+var userChosenColor = this.id;
+
+playSound(userChosenColor);
+
+animatePress(userChosenColor);
+
+userPattern.push(userChosenColor);
+
+checkAnswer();
+
+});
+
+
+
+//GAME SEQUENCE
+
+function nextSequence() {
+
+  userPattern = [];
+
+  var randomColor = buttonColors[Math.floor(Math.random()*4)];
+
+  gamePattern.push(randomColor);
+
+
+
+  playSound(randomColor);
+
+  $("#" + randomColor).fadeIn(100).fadeOut(100).fadeIn(100);
+
+  $("h1").text("Level " + gamePattern.length);
+
+}
+
+
+
+//CHECK ANSWERS
+
+function checkAnswer () {
+
+if (userPattern[userPattern.length-1] === gamePattern[userPattern.length-1]) {
+
+     if (gamePattern.length === userPattern.length) {
+
+    setTimeout(function () {
+
+    nextSequence();
+
+    }, 1000);
+
+  }
+
+} else {
+
+  playSound("wrong");
+
+  $("body").addClass("game-over");
+
+  setTimeout(function() {
+
+    $("body").removeClass("game-over")
+
+    }, 200);
+
+   $("h1").text("Game Over, Press Any Key to Restart");
+
+
+
+  startOver();
+
+}
+
+}
+
+
+
+//START OVER
+
+function startOver () {
+
+gamePattern = [];
+
+}
+
+
+
+//PLAYING SOUND
+
+function playSound(name) {
+
+var audio = new Audio("sounds/" + name + ".mp3");
+
+audio.play();
+
+}
+
+
+
+//ANIMATE PRESS
+
+function animatePress (currentColor) {
+
+  $("#" + currentColor).addClass("pressed");
+
+  setTimeout (function() {
+
+  $("#" + currentColor).removeClass("pressed");
+
+  }, 200);
+
+}
